@@ -1,0 +1,62 @@
+!create AcmeCorp : Company
+!set AcmeCorp.Name := 'Acme Corporation'
+
+!create ResearchDep : Department
+!set ResearchDep.Name := 'Research'
+
+!create EmpCraig : Manager
+!set EmpCraig.Name := 'Craig'
+!set EmpCraig.Address := 'Redmond'
+!set EmpCraig.Salary := 123456
+!insert (EmpCraig, ResearchDep) into WorksIn
+
+!create EmpErik : Employee
+!set EmpErik.Name := 'Erik'
+!set EmpErik.Address := 'Utrecht'
+!set EmpErik.Salary := 12345
+!insert (EmpErik, ResearchDep) into WorksIn
+
+!create EmpRalf : Employee
+!set EmpRalf.Name := 'Ralf'
+!set EmpRalf.Address := 'Koblenz'
+!set EmpRalf.Salary := 1234
+!insert (EmpRalf, ResearchDep) into WorksIn
+
+!create DevDep : Department
+!set DevDep.Name := 'Development'
+
+!create EmpRay : Manager
+!set EmpRay.Name := 'Ray'
+!set EmpRay.Address := 'Redmond'
+!set EmpRay.Salary := 234567
+!insert (EmpRay, DevDep) into WorksIn
+
+!create Dev1Dep : Department
+!set Dev1Dep.Name := 'Development 1.0'
+!insert (Dev1Dep, DevDep) into SubdepartmentOf
+
+!create EmpKlaus : Manager
+!set EmpKlaus.Name := 'Klaus'
+!set EmpKlaus.Address := 'Boston'
+!set EmpKlaus.Salary := 23456
+!insert (EmpKlaus, Dev1Dep) into WorksIn
+
+!create Dev11Dep : Department
+!set Dev11Dep.Name := 'Development 1.1'
+!insert (Dev11Dep, Dev1Dep) into SubdepartmentOf
+
+!create EmpKarl : Manager
+!set EmpKarl.Name := 'Karl'
+!set EmpKarl.Address := 'Riga'
+!set EmpKarl.Salary := 2345
+!insert (EmpKarl, Dev11Dep) into WorksIn
+
+!create EmpJoe : Employee
+!set EmpJoe.Name := 'Joe'
+!set EmpJoe.Address := 'Wifi City'
+!set EmpJoe.Salary := 2344
+!insert (EmpJoe, Dev11Dep) into WorksIn
+
+!insert (DevDep, AcmeCorp) into DepartmentOf
+!insert (ResearchDep, AcmeCorp) into DepartmentOf
+

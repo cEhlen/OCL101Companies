@@ -1,0 +1,140 @@
+model one_o_one_companies
+
+-----------------------------------------------------------
+-- Classes
+
+class Company
+attributes
+    Name : String
+operations
+    total() : Real =
+        self.departments->collect(d : Department | d.total())->sum()
+    cut()
+    complyRankedSalary() : Boolean =
+        self.departments->forAll(d : Department | d.complyRankedSalary())
+    containsEmployee(e: Employee) : Boolean =
+        self.departments->forAll(d : Department | d.containsEmployee(e))
+    containsDepartment(dep: Department) : Boolean =
+        self.departments->one(d : Department | d <> dep and not d.containsDepartment(dep))
+
+    addDepartment(d : Department)
+    removeDepartment(d : Department)
+end
+
+class Department
+attributes
+    Name : String
+operations
+    total() : Real =
+        self.employees->collect(Salary)->sum()
+    cut()
+    complyRankedSalary() : Boolean =
+        self.employees->sortedBy(e : Employee | e.Salary)->last().oclIsTypeOf(Manager) and
+        self.subdepartments->forAll(d : Department | d.complyRankedSalaryRec(self.employees->sortedBy(e : Employee | e.Salary)->first().Salary))
+
+    complyRankedSalaryRec(max : Real) : Boolean =
+        self.employees->sortedBy(e : Employee | e.Salary)->last().oclIsTypeOf(Manager) and
+        self.employees->sortedBy(e : Employee | e.Salary)->last().Salary < max and
+        self.subdepartments->forAll(d : Department | d.complyRankedSalaryRec(self.employees->sortedBy(e : Employee | e.Salary)->first().Salary))
+
+    containsEmployee(e : Employee) : Boolean =
+        self.employees->includes(e) or self.subdepartments->one(d : Department | d.containsEmployee(e))
+
+    containsDepartment(dep : Department) : Boolean =
+        self.subdepartments->includes(dep) or self.subdepartments->one(d : Department | d.containsDepartment(dep))
+
+    addEmployee(e : Employee)
+    removeEmployee(e : Employee)
+    addDepartment(d : Department)
+    removeDepartment(d : Department)
+end
+
+class Employee
+attributes
+    Name : String
+    Salary : Real
+    Address : String
+    Employer : Company
+operations
+    cut()
+end
+
+class Manager < Employee
+end
+
+-----------------------------------------------------------
+-- Associations
+
+association WorksIn between
+    Employee[*] role employees
+    Department[1] role department
+end
+
+association SubdepartmentOf between
+    Department[*] role subdepartments
+    Department[0..1] role parent
+end
+
+association DepartmentOf between
+    Department[*] role departments
+    Company[1] role company
+end
+
+-----------------------------------------------------------
+-- Constraints
+constraints
+
+
+-------------
+-- Company
+-------------
+context Company
+    inv needs_a_name: self.Name.size() > 0
+    inv comply_ranked_salary: self.complyRankedSalary()
+
+context Company::addDepartment(d : Department)
+    pre: self.departments->excludes(d)
+    post: self.departments->includes(d)
+
+context Company::removeDepartment(d : Department)
+    pre: self.departments->includes(d)
+    post: self.departments->excludes(d)
+
+-------------
+-- Department
+-------------
+context Department
+    inv needs_a_name: self.Name.size() > 0
+    inv comply_ranked_salary: self.company.complyRankedSalary()
+    inv needs_a_manager: employees->one(e : Employee | e.oclIsTypeOf(Manager))
+
+context Department::cut()
+    post: self.total() = (self@pre).total() / 2.0
+
+context Department::addEmployee(e : Employee)
+    pre: not company.containsEmployee(e)
+    post: employees->includes(e)
+
+context Department::removeEmployee(e : Employee)
+    pre: employees->includes(e)
+    post: not company.containsEmployee(e)
+
+context Department::addDepartment(d : Department)
+    pre: not company.containsDepartment(d)
+    post: self.subdepartments->includes(d)
+
+context Department::removeDepartment(d : Department)
+    pre: self.subdepartments->includes(d)
+    post: not company.containsDepartment(d)
+
+-------------
+-- Employee
+-------------
+context Employee
+    inv salary_must_be_greater_than_zero: Salary > 0
+    inv needs_a_name: Name.size() > 0
+    inv needs_an_address: Address.size() > 0
+
+context Employee::cut()
+post: Salary = 0.5 * Salary@pre
+
