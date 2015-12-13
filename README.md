@@ -19,7 +19,7 @@ These commands open the specification and loads a sample company into memory.
 
 ![Class diagram](img/class_diagram.png)
 
-![Object diagram](img/object_diagram)
+![Object diagram](img/object_diagram.png)
 
 ### Checking class invariants
 The ⚡ Button checks all invariants and shows the output. You can doubleclick every constraint and see the stacktrace of the execution.
