@@ -8,18 +8,21 @@
 !set EmpCraig.Name := 'Craig'
 !set EmpCraig.Address := 'Redmond'
 !set EmpCraig.Salary := 123456
+!set EmpCraig.Employer := AcmeCorp
 !insert (EmpCraig, ResearchDep) into WorksIn
 
 !create EmpErik : Employee
 !set EmpErik.Name := 'Erik'
 !set EmpErik.Address := 'Utrecht'
 !set EmpErik.Salary := 12345
+!set EmpErik.Employer := AcmeCorp
 !insert (EmpErik, ResearchDep) into WorksIn
 
 !create EmpRalf : Employee
 !set EmpRalf.Name := 'Ralf'
 !set EmpRalf.Address := 'Koblenz'
 !set EmpRalf.Salary := 1234
+!set EmpRalf.Employer := AcmeCorp
 !insert (EmpRalf, ResearchDep) into WorksIn
 
 !create DevDep : Department
@@ -29,6 +32,7 @@
 !set EmpRay.Name := 'Ray'
 !set EmpRay.Address := 'Redmond'
 !set EmpRay.Salary := 234567
+!set EmpRay.Employer := AcmeCorp
 !insert (EmpRay, DevDep) into WorksIn
 
 !create Dev1Dep : Department
@@ -39,6 +43,7 @@
 !set EmpKlaus.Name := 'Klaus'
 !set EmpKlaus.Address := 'Boston'
 !set EmpKlaus.Salary := 23456
+!set EmpKlaus.Employer := AcmeCorp
 !insert (EmpKlaus, Dev1Dep) into WorksIn
 
 !create Dev11Dep : Department
@@ -49,12 +54,14 @@
 !set EmpKarl.Name := 'Karl'
 !set EmpKarl.Address := 'Riga'
 !set EmpKarl.Salary := 2345
+!set EmpKarl.Employer := AcmeCorp
 !insert (EmpKarl, Dev11Dep) into WorksIn
 
 !create EmpJoe : Employee
 !set EmpJoe.Name := 'Joe'
 !set EmpJoe.Address := 'Wifi City'
 !set EmpJoe.Salary := 2344
+!set EmpJoe.Employer := AcmeCorp
 !insert (EmpJoe, Dev11Dep) into WorksIn
 
 !insert (DevDep, AcmeCorp) into DepartmentOf
