@@ -15,7 +15,8 @@ operations
     containsEmployee(e: Employee) : Boolean =
         self.departments->forAll(d : Department | d.containsEmployee(e))
     containsDepartment(dep: Department) : Boolean =
-        self.departments->one(d : Department | d <> dep and not d.containsDepartment(dep))
+        self.departments->includes(dep) or
+        self.departments->one(d : Department | d <> dep and d.containsDepartment(dep))
 
     addDepartment(d : Department)
     removeDepartment(d : Department)
@@ -42,6 +43,13 @@ operations
 
     containsDepartment(dep : Department) : Boolean =
         self.subdepartments->includes(dep) or self.subdepartments->one(d : Department | d.containsDepartment(dep))
+
+    getCompany() : Company =
+        if self.company.oclIsUndefined() then
+            self.parent.getCompany()
+        else
+            self.company
+        endif
 
     addEmployee(e : Employee)
     removeEmployee(e : Employee)
@@ -93,39 +101,49 @@ context Company
     inv comply_ranked_salary: self.complyRankedSalary()
 
 context Company::addDepartment(d : Department)
-    pre: self.departments->excludes(d)
-    post: self.departments->includes(d)
+    pre department_not_in_company: not self.containsDepartment(d)
+    pre department_has_no_company: d.getCompany().oclIsUndefined()
+    post department_has_company: d.getCompany() = self
+    post department_was_added: self.containsDepartment(d)
 
 context Company::removeDepartment(d : Department)
-    pre: self.departments->includes(d)
-    post: self.departments->excludes(d)
+    pre department_in_company: self.containsDepartment(d)
+    post department_was_removed: not self.containsDepartment(d)
+    post employees_fired: self.total() + d.total() = (self@pre).total()
+
+context Company::cut()
+    post salary_was_cut: self.total() = (self@pre).total() / 2.0
 
 -------------
 -- Department
 -------------
 context Department
     inv needs_a_name: self.Name.size() > 0
-    inv comply_ranked_salary: self.company.complyRankedSalary()
+    inv comply_ranked_salary: self.getCompany().complyRankedSalary()
     inv needs_a_manager: employees->one(e : Employee | e.oclIsTypeOf(Manager))
 
 context Department::cut()
-    post: self.total() = (self@pre).total() / 2.0
+    post salary_was_cut: self.total() = (self@pre).total() / 2.0
 
 context Department::addEmployee(e : Employee)
-    pre: not company.containsEmployee(e)
-    post: employees->includes(e)
+    pre employee_not_in_company: not self.getCompany().containsEmployee(e)
+    pre employee_not_employed_by_company: e.Employer <> self.getCompany()
+    post employee_employed_by_company: e.Employer = self.getCompany()
+    post employee_works_for_department: employees->includes(e)
 
 context Department::removeEmployee(e : Employee)
-    pre: employees->includes(e)
-    post: not company.containsEmployee(e)
+    pre employee_works_in_department: employees->includes(e)
+    post employee_works_no_longer_for_company: not self.getCompany().containsEmployee(e)
 
 context Department::addDepartment(d : Department)
-    pre: not company.containsDepartment(d)
-    post: self.subdepartments->includes(d)
+    pre department_not_self: d <> self
+    pre department_not_already_in_company: not self.getCompany().containsDepartment(d)
+    pre department_has_no_company: d.getCompany().oclIsUndefined()
+    post department_was_added: self.subdepartments->includes(d)
 
 context Department::removeDepartment(d : Department)
-    pre: self.subdepartments->includes(d)
-    post: not company.containsDepartment(d)
+    pre department_is_subdepartment: self.subdepartments->includes(d)
+    post department_was_removed: not self.getCompany().containsDepartment(d)
 
 -------------
 -- Employee
@@ -136,5 +154,5 @@ context Employee
     inv needs_an_address: Address.size() > 0
 
 context Employee::cut()
-post: Salary = 0.5 * Salary@pre
+    post salary_was_cut: Salary = 0.5 * Salary@pre
 

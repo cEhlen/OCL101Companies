@@ -4,66 +4,97 @@
 !create ResearchDep : Department
 !set ResearchDep.Name := 'Research'
 
+!openter AcmeCorp addDepartment(ResearchDep)
+!insert (ResearchDep, AcmeCorp) into DepartmentOf
+!opexit
+
 !create EmpCraig : Manager
 !set EmpCraig.Name := 'Craig'
 !set EmpCraig.Address := 'Redmond'
 !set EmpCraig.Salary := 123456
+
+!openter ResearchDep addEmployee(EmpCraig)
 !set EmpCraig.Employer := AcmeCorp
 !insert (EmpCraig, ResearchDep) into WorksIn
+!opexit
 
 !create EmpErik : Employee
 !set EmpErik.Name := 'Erik'
 !set EmpErik.Address := 'Utrecht'
 !set EmpErik.Salary := 12345
+
+!openter ResearchDep addEmployee(EmpErik)
 !set EmpErik.Employer := AcmeCorp
 !insert (EmpErik, ResearchDep) into WorksIn
+!opexit
 
 !create EmpRalf : Employee
 !set EmpRalf.Name := 'Ralf'
 !set EmpRalf.Address := 'Koblenz'
 !set EmpRalf.Salary := 1234
+
+!openter ResearchDep addEmployee(EmpRalf)
 !set EmpRalf.Employer := AcmeCorp
 !insert (EmpRalf, ResearchDep) into WorksIn
+!opexit
 
 !create DevDep : Department
 !set DevDep.Name := 'Development'
+
+!openter AcmeCorp addDepartment(DevDep)
+!insert (DevDep, AcmeCorp) into DepartmentOf
+!opexit
 
 !create EmpRay : Manager
 !set EmpRay.Name := 'Ray'
 !set EmpRay.Address := 'Redmond'
 !set EmpRay.Salary := 234567
+
+!openter DevDep addEmployee(EmpRay)
 !set EmpRay.Employer := AcmeCorp
 !insert (EmpRay, DevDep) into WorksIn
+!opexit
 
 !create Dev1Dep : Department
 !set Dev1Dep.Name := 'Development 1.0'
+
+!openter DevDep addDepartment(Dev1Dep)
 !insert (Dev1Dep, DevDep) into SubdepartmentOf
+!opexit
 
 !create EmpKlaus : Manager
 !set EmpKlaus.Name := 'Klaus'
 !set EmpKlaus.Address := 'Boston'
 !set EmpKlaus.Salary := 23456
+
+!openter Dev1Dep addEmployee(EmpKlaus)
 !set EmpKlaus.Employer := AcmeCorp
 !insert (EmpKlaus, Dev1Dep) into WorksIn
+!opexit
 
 !create Dev11Dep : Department
 !set Dev11Dep.Name := 'Development 1.1'
+
+!openter Dev1Dep addDepartment(Dev11Dep)
 !insert (Dev11Dep, Dev1Dep) into SubdepartmentOf
+!opexit
 
 !create EmpKarl : Manager
 !set EmpKarl.Name := 'Karl'
 !set EmpKarl.Address := 'Riga'
 !set EmpKarl.Salary := 2345
+
+!openter Dev11Dep addEmployee(EmpKarl)
 !set EmpKarl.Employer := AcmeCorp
 !insert (EmpKarl, Dev11Dep) into WorksIn
+!opexit
 
 !create EmpJoe : Employee
 !set EmpJoe.Name := 'Joe'
 !set EmpJoe.Address := 'Wifi City'
 !set EmpJoe.Salary := 2344
+
+!openter Dev11Dep addEmployee(EmpJoe)
 !set EmpJoe.Employer := AcmeCorp
 !insert (EmpJoe, Dev11Dep) into WorksIn
-
-!insert (DevDep, AcmeCorp) into DepartmentOf
-!insert (ResearchDep, AcmeCorp) into DepartmentOf
-
+!opexit
