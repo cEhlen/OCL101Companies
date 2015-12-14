@@ -109,6 +109,7 @@ context Company::addDepartment(d : Department)
 context Company::removeDepartment(d : Department)
     pre department_in_company: self.containsDepartment(d)
     post department_was_removed: not self.containsDepartment(d)
+    post department_company_not_set: d.getCompany().oclIsUndefined()
     post employees_fired: self.total() + d.total() = (self@pre).total()
 
 context Company::cut()
@@ -135,16 +136,19 @@ context Department::addEmployee(e : Employee)
 context Department::removeEmployee(e : Employee)
     pre employee_works_in_department: employees->includes(e)
     post employee_works_no_longer_for_company: not self.getCompany().containsEmployee(e)
+    post employee_employer_not_set: e.Employer.oclIsUndefined()
 
 context Department::addDepartment(d : Department)
     pre department_not_self: d <> self
     pre department_not_already_in_company: not self.getCompany().containsDepartment(d)
     pre department_has_no_company: d.getCompany().oclIsUndefined()
     post department_was_added: self.subdepartments->includes(d)
+    post department_is_parent_of_new: d.parent = self
 
 context Department::removeDepartment(d : Department)
     pre department_is_subdepartment: self.subdepartments->includes(d)
     post department_was_removed: not self.getCompany().containsDepartment(d)
+    post department_no_longer_parent_of_d: d.parent.oclIsUndefined()
 
 -------------
 -- Employee
