@@ -121,6 +121,7 @@ context Department
     inv needs_a_name: self.Name.size() > 0
     inv comply_ranked_salary: self.getCompany().complyRankedSalary()
     inv needs_a_manager: employees->one(e : Employee | e.oclIsTypeOf(Manager))
+    inv subdepartment_or_toplevel: self.company.oclIsUndefined() implies not self.parent.oclIsUndefined()
 
 context Department::cut()
     post salary_was_cut: self.total() = (self@pre).total() / 2.0
