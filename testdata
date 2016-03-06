@@ -5,7 +5,7 @@
 !set ResearchDep.Name := 'Research'
 
 !openter AcmeCorp addDepartment(ResearchDep)
-!insert (ResearchDep, AcmeCorp) into DepartmentOf
+!insert (AcmeCorp, ResearchDep) into DepartmentOf
 !opexit
 
 !create EmpCraig : Manager
@@ -15,7 +15,7 @@
 
 !openter ResearchDep addEmployee(EmpCraig)
 !set EmpCraig.Employer := AcmeCorp
-!insert (EmpCraig, ResearchDep) into WorksIn
+!insert (ResearchDep, EmpCraig) into WorksIn
 !opexit
 
 !create EmpErik : Employee
@@ -25,7 +25,7 @@
 
 !openter ResearchDep addEmployee(EmpErik)
 !set EmpErik.Employer := AcmeCorp
-!insert (EmpErik, ResearchDep) into WorksIn
+!insert (ResearchDep, EmpErik) into WorksIn
 !opexit
 
 !create EmpRalf : Employee
@@ -35,14 +35,14 @@
 
 !openter ResearchDep addEmployee(EmpRalf)
 !set EmpRalf.Employer := AcmeCorp
-!insert (EmpRalf, ResearchDep) into WorksIn
+!insert (ResearchDep, EmpRalf) into WorksIn
 !opexit
 
 !create DevDep : Department
 !set DevDep.Name := 'Development'
 
 !openter AcmeCorp addDepartment(DevDep)
-!insert (DevDep, AcmeCorp) into DepartmentOf
+!insert (AcmeCorp, DevDep) into DepartmentOf
 !opexit
 
 !create EmpRay : Manager
@@ -52,14 +52,14 @@
 
 !openter DevDep addEmployee(EmpRay)
 !set EmpRay.Employer := AcmeCorp
-!insert (EmpRay, DevDep) into WorksIn
+!insert (DevDep, EmpRay) into WorksIn
 !opexit
 
 !create Dev1Dep : Department
 !set Dev1Dep.Name := 'Development 1.0'
 
 !openter DevDep addDepartment(Dev1Dep)
-!insert (Dev1Dep, DevDep) into SubdepartmentOf
+!insert (DevDep, Dev1Dep) into SubdepartmentOf
 !opexit
 
 !create EmpKlaus : Manager
@@ -69,14 +69,14 @@
 
 !openter Dev1Dep addEmployee(EmpKlaus)
 !set EmpKlaus.Employer := AcmeCorp
-!insert (EmpKlaus, Dev1Dep) into WorksIn
+!insert (Dev1Dep, EmpKlaus) into WorksIn
 !opexit
 
 !create Dev11Dep : Department
 !set Dev11Dep.Name := 'Development 1.1'
 
 !openter Dev1Dep addDepartment(Dev11Dep)
-!insert (Dev11Dep, Dev1Dep) into SubdepartmentOf
+!insert (Dev1Dep, Dev11Dep) into SubdepartmentOf
 !opexit
 
 !create EmpKarl : Manager
@@ -86,7 +86,7 @@
 
 !openter Dev11Dep addEmployee(EmpKarl)
 !set EmpKarl.Employer := AcmeCorp
-!insert (EmpKarl, Dev11Dep) into WorksIn
+!insert (Dev11Dep, EmpKarl) into WorksIn
 !opexit
 
 !create EmpJoe : Employee
@@ -96,5 +96,5 @@
 
 !openter Dev11Dep addEmployee(EmpJoe)
 !set EmpJoe.Employer := AcmeCorp
-!insert (EmpJoe, Dev11Dep) into WorksIn
+!insert (Dev11Dep, EmpJoe) into WorksIn
 !opexit

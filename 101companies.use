@@ -71,21 +71,21 @@ class Manager < Employee
 end
 
 -----------------------------------------------------------
--- Associations
+-- Compositions
 
-association WorksIn between
-    Employee[*] role employees
+composition WorksIn between
     Department[1] role department
+    Employee[*] role employees
 end
 
-association SubdepartmentOf between
-    Department[*] role subdepartments
+composition SubdepartmentOf between
     Department[0..1] role parent
+    Department[*] role subdepartments
 end
 
-association DepartmentOf between
+composition DepartmentOf between
+    Company[0..1] role company
     Department[*] role departments
-    Company[1] role company
 end
 
 -----------------------------------------------------------
